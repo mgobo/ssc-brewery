@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -85,12 +86,14 @@ public class BeerController {
         return mav;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'USER')")
     @GetMapping("/new")
     public String initCreationForm(Model model) {
         model.addAttribute("beer", Beer.builder().build());
         return "beers/createBeer";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'USER')")
     @PostMapping("/new")
     public String processCreationForm(Beer beer) {
         //ToDO: Add Service
@@ -114,6 +117,7 @@ public class BeerController {
         return "beers/createOrUpdateBeer";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'USER')")
     @PostMapping("/{beerId}/edit")
     public String processUpdateForm(@Valid Beer beer, BindingResult result) {
         if (result.hasErrors()) {

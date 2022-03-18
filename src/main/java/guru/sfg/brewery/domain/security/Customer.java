@@ -14,16 +14,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package guru.sfg.brewery.domain;
+package guru.sfg.brewery.domain.security;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import guru.sfg.brewery.domain.BaseEntity;
+import guru.sfg.brewery.domain.BeerOrder;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;

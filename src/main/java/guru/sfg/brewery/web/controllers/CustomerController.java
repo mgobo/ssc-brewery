@@ -17,9 +17,10 @@
 
 package guru.sfg.brewery.web.controllers;
 
-import guru.sfg.brewery.domain.Customer;
+import guru.sfg.brewery.domain.security.Customer;
 import guru.sfg.brewery.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -47,18 +49,20 @@ public class CustomerController {
         return "customers/findCustomers";
     }
 
+//    @Secured({"ROLE_ADMIN", "ROLE_CUSTOMER"})
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @GetMapping
     public String processFindFormReturnMany(Customer customer, BindingResult result, Model model){
         // find customers by name
         //ToDO: Add Service
-        List<Customer> customers = customerRepository.findAllByCustomerNameLike("%" + customer.getCustomerName() + "%");
+        Optional<Customer> customers = Optional.ofNullable(customerRepository.findByCustomerName(customer.getCustomerName()));
         if (customers.isEmpty()) {
             // no customers found
             result.rejectValue("customerName", "notFound", "not found");
             return "customers/findCustomers";
-        } else if (customers.size() == 1) {
+        } else if (customers.get() != null) {
             // 1 customer found
-            customer = customers.get(0);
+            customer = customers.get();
             return "redirect:/customers/" + customer.getId();
         } else {
             // multiple customers found
@@ -80,7 +84,7 @@ public class CustomerController {
         model.addAttribute("customer", Customer.builder().build());
         return "customers/createCustomer";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/new")
     public String processCreationForm(Customer customer) {
         //ToDO: Add Service

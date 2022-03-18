@@ -18,7 +18,7 @@
 package guru.sfg.brewery.services;
 
 import guru.sfg.brewery.domain.BeerOrder;
-import guru.sfg.brewery.domain.Customer;
+import guru.sfg.brewery.domain.security.Customer;
 import guru.sfg.brewery.domain.OrderStatusEnum;
 import guru.sfg.brewery.repositories.BeerOrderRepository;
 import guru.sfg.brewery.repositories.CustomerRepository;
@@ -52,7 +52,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
 
         if (customerOptional.isPresent()) {
             Page<BeerOrder> beerOrderPage =
-                    beerOrderRepository.findAllByCustomer(customerOptional.get(), pageable);
+                    beerOrderRepository.findAllByCustomer(customerOptional.get().getId().toString(), pageable);
 
             return new BeerOrderPagedList(beerOrderPage
                     .stream()
@@ -74,7 +74,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
         if (customerOptional.isPresent()) {
             BeerOrder beerOrder = beerOrderMapper.dtoToBeerOrder(beerOrderDto);
             beerOrder.setId(null); //should not be set by outside client
-            beerOrder.setCustomer(customerOptional.get());
+            beerOrder.setCustomerRef(customerOptional.get().getId().toString());
             beerOrder.setOrderStatus(OrderStatusEnum.NEW);
 
             beerOrder.getBeerOrderLines().forEach(line -> line.setBeerOrder(beerOrder));
@@ -112,7 +112,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
                 BeerOrder beerOrder = beerOrderOptional.get();
 
                 // fall to exception if customer id's do not match - order not for customer
-                if(beerOrder.getCustomer().getId().equals(customerId)){
+                if(beerOrder.getCustomerRef().equals(customerId)){
                     return beerOrder;
                 }
             }

@@ -16,8 +16,9 @@
  */
 package guru.sfg.brewery.repositories;
 
-import guru.sfg.brewery.domain.Customer;
+import guru.sfg.brewery.domain.security.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,5 +27,5 @@ import java.util.UUID;
  * Created by jt on 2019-01-26.
  */
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
-    List<Customer> findAllByCustomerNameLike(String customerName);
+    Customer findByCustomerName(String name);
 }

@@ -17,7 +17,7 @@
 package guru.sfg.brewery.repositories;
 
 import guru.sfg.brewery.domain.BeerOrder;
-import guru.sfg.brewery.domain.Customer;
+import guru.sfg.brewery.domain.security.Customer;
 import guru.sfg.brewery.domain.OrderStatusEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ import java.util.UUID;
  */
 public interface BeerOrderRepository  extends JpaRepository<BeerOrder, UUID> {
 
-    Page<BeerOrder> findAllByCustomer(Customer customer, Pageable pageable);
+    Page<BeerOrder> findAllByCustomer(String customerUUID, Pageable pageable);
 
     List<BeerOrder> findAllByOrderStatus(OrderStatusEnum orderStatusEnum);
 

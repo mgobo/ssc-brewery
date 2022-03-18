@@ -16,6 +16,7 @@
  */
 package guru.sfg.brewery.domain;
 
+import guru.sfg.brewery.domain.security.Customer;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
